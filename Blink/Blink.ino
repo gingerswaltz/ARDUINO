@@ -21,6 +21,8 @@ int digit1, digit2;              // Переменные для хранения
 //
 void setup() {
   Serial.begin(9600);
+  pinMode(PB13, OUTPUT);
+  pinMode(PB15, OUTPUT);
   pinMode(POTENTIOMETER_PIN, INPUT);
   pinMode(SEGMENT_G_PIN, OUTPUT); // g
   pinMode(SEGMENT_C_PIN, OUTPUT); // c
@@ -35,50 +37,41 @@ void setup() {
 }
 
 
-int digits[10][7] = {            // Массив, хранящий информацию о том, какие сегменты должны быть включены для каждой цифры
-  {1,1,1,1,1,1,0},            // 0
-  {0,1,1,0,0,0,0},            // 1
-  {1,0,1,1,1,0,1},            // 2
-  {1,1,1,1,0,0,1},            // 3
-  {0,1,1,0,0,1,1},            // 4
-  {1,1,0,1,0,1,1},            // 5
-  {1,1,0,1,1,1,1},            // 6
-  {1,1,1,0,0,0,0},            // 7
-  {1,1,1,1,1,1,1},            // 8
-  {1,1,1,1,0,1,1}             // 9
+byte digits[] = { 
+ 0b11000000, // 0 
+ 0b11111001, // 1 
+ 0b10100100, // 2 
+ 0b10110000, // 3 
+ 0b10011001, // 4 
+ 0b10010010, // 5 
+ 0b10000010, // 6 
+ 0b11111000, // 7 
+ 0b10000000, // 8 
+ 0b10010000 // 9 
 };
 
+
+void displayDigit(byte digit, int digitPin, int segPins[]){
+  for (int i=0; i<7; i++){
+    if (digit &(1<<i)){
+      digitalWrite(segPins[i], HIGH);
+    }else {
+      digitalWrite(segPins[i], LOW);
+    }
+  }
+
+  digitalWrite(digitPin, LOW);
+  delayMicroseconds(500);
+  digitalWrite(digitPin, HIGH);
+}
 
 // the loop function runs over and over again forever
 void loop() {
 
-int potValue = analogRead(POTENTIOMETER_PIN);    // Считываем значение с потенциометра
-  digit1 = map(potValue, 0, 4095, 0, 10);    // Преобразуем первую цифру в диапазон от 0 до 9
-  digit2 = digit1 + 1;                    // Вычисляем вторую цифру как следующую после первой
-  
-  // Ограничиваем вторую цифру диапазоном от 0 до 9
-  
-  if (digit2>9)
-  {
-      for (int i = 0; i < 9; i++) {
-        digitalWrite(segPins[i], digits[digit1][i]);
-      } 
-      digitalWrite(PB1, HIGH);
-      digitalWrite(PB0, LOW);
-  }else
-  {
-      digitalWrite(PB1, LOW);
-
-    }
-  
-  // Отображаем первую цифру на левом индикаторе
-  for (int i = 0; i < 9; i++) {
-    digitalWrite(segPins[i], digits[digit1][i]);
-  }
-  
-  // Отображаем вторую цифру на правом индикаторе
-  for (int i = 0; i < 6; i++) {
-    digitalWrite(segPins[i], digits[digit1][i]);
-  }
- delay(100);
+int angle =map(analogRead(POTENTIOMETER_PIN), 1, 4095, 0, 20); // Считываем значение с потенциометра
+ Serial.println(angle);
+  Serial.println(angle%10);
+  ////digit1 =     // Преобразуем первую цифру в диапазон от 0 до 9
+//  digit2 = digit1 + 1;                    // Вычисляем вторую цифру как следующую после первой
+ displayDigit(digits[4], PB14, segPins); 
 }
