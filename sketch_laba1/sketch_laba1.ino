@@ -30,21 +30,21 @@ void setup(){
 void loop() {
   randomSeed(analogRead(PB1));
   int tumbler_state=digitalRead(PB10);   // Считываем положение тумблера..
-  eps=(random(97, 103));
+  eps=(random(995, 1005));
   
   if(tumbler_state==1)                   // Если включено, то у нас режим "КЗ"
   {
     rn=analogRead(PA0)*((10*r_eg)/4096);  // Считываем значение Rн с потенциометра
     delay(100);                           // Задержка для корректного вывода
-      I=((e_eg)/(r_eg+rn))*(eps/100);                 // Расчёт по формулам электротехники
-      U=(rn*I)*(eps/100);
+      I=((e_eg)/(r_eg+rn))*(eps/1000);                 // Расчёт по формулам электротехники
+      U=(rn*I)*(eps/1000);
     
     lcd.setCursor(7,0);                  
     lcd.print("I");
     lcd.setCursor(8,0);  
     lcd.print(":");
     lcd.setCursor(9,0);
-    delay(150);
+    delay(1000);
     lcd.print(I*1000);                    // вывод в мA
     lcd.setCursor(14,0);
     lcd.print("m");
@@ -57,7 +57,7 @@ void loop() {
     lcd.print(":");
     lcd.setCursor(2,1);
     dtostrf(U, 4, 1, buffer);             // Формат до 1 знака после запятой
-    delay(150);
+    delay(1000);
     lcd.print(buffer);
     lcd.setCursor(7,1);
     lcd.print("v");
