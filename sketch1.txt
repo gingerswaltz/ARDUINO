@@ -1,6 +1,7 @@
 // Определение пинов для каждого семисегментного индикатора
 const int segmentPins[] = {2, 3, 4, 5, 6, 7, 8};
 const int digitPins[] = {9, 10};
+
 const int potentiometerPin = A0; // Пин для подключения потенциометра
 
 // Определение переменных для отслеживания таймера
@@ -65,5 +66,5 @@ digitalWrite(onesDigitPin, HIGH);
 digitalWrite(tensDigitPin, HIGH);
 }
 
-
+http://codius.ru/articles/Arduino_UNO_4разрядный_7сегментный_идикатор_12_pin_3641BS_red
 
