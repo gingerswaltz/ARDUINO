@@ -1,37 +1,69 @@
+// Определение пинов для каждого семисегментного индикатора
+const int segmentPins[] = {2, 3, 4, 5, 6, 7, 8};
+const int digitPins[] = {9, 10};
+const int potentiometerPin = A0; // Пин для подключения потенциометра
 
-// the setup function runs once when you press reset or power the board
+// Определение переменных для отслеживания таймера
+int timerValue = 1; // Начальное значение таймера
+unsigned long previousMillis = 0; // Время последнего обновления
 
 void setup() {
-  // initialize digital pin PB1 as an output.
-  pinMode(PA7, INPUT);
-  pinMode(PB3, OUTPUT);
-  pinMode(PB4, OUTPUT);
-  pinMode(PB5, OUTPUT);
-  pinMode(PB6, OUTPUT);
-  pinMode(PB7, OUTPUT);
-  pinMode(PB8, OUTPUT);
-  pinMode(PB9, OUTPUT);
+  // Настройка пинов семисегментного индикатора как выходных
+  for (int i = 0; i < 7; i++) {
+    pinMode(segmentPins[i], OUTPUT);
+  }
+  for (int i = 0; i < 2; i++) {
+    pinMode(digitPins[i], OUTPUT);
+  }
 }
 
-// the loop function runs over and over again forever
 void loop() {
-//  digitalWrite(PB3,HIGH); // 5 noga G
-//  digitalWrite(PB4,HIGH); // 7 noga B
-//  digitalWrite(PB5,HIGH); // 4 noga C
-//  digitalWrite(PB6,HIGH); // 
-//  digitalWrite(PB7,HIGH);
-//  digitalWrite(PB8,HIGH);
-//  digitalWrite(PB9,HIGH);
-int val=analogRead(PA7);
-if (val>273) 
-{ 
-  digitalWrite(PB5,HIGH); 
- digitalWrite(PB4,HIGH); // 7 noga B
-}else
-{
-  digitalWrite(PB5,LOW); // 4 noga C
-  digitalWrite(PB4,LOW); // 7 noga B
+  // Получение значения с потенциометра
+  int potValue = analogRead(potentiometerPin);
+  
+  // Приведение значения потенциометра к диапазону 1-20
+  timerValue = map(potValue, 0, 1023, 1, 20);
+
+  // Получение текущего времени в миллисекундах
+  unsigned long currentMillis = millis();
+
+  // Обновление таймера каждую секунду
+  if (currentMillis - previousMillis >= 1000) {
+    updateDisplay(timerValue); // Обновление семисегментного индикатора
+    previousMillis = currentMillis; // Обновление времени последнего обновления
+  }
 }
 
-  
+void updateDisplay(int value) {
+// Разделение значения на две цифры
+int onesDigit = value % 10;
+int tensDigit = value / 10;
+
+// Выбор соответствующих пинов для каждой цифры
+int onesDigitPin = digitPins[0];
+int tensDigitPin = digitPins[1];
+
+// Выбор соответствующих сегментов для каждой цифры
+int onesSegmentPins[] = {segmentPins[0], segmentPins[1], segmentPins[2], segmentPins[4], segmentPins[5], segmentPins[6]};
+int tensSegmentPins[] = {segmentPins[0], segmentPins[1], segmentPins[3], segmentPins[4], segmentPins[5], segmentPins[6]};
+
+// Выключение всех пинов сегментов и цифр перед обновлением
+for (int i = 0; i < 7; i++) {
+digitalWrite(segmentPins[i], LOW);
 }
+digitalWrite(onesDigitPin, LOW);
+digitalWrite(tensDigitPin, LOW);
+
+// Включение соответствующих сегментов для каждой цифры
+for (int i = 0; i < 6; i++) {
+digitalWrite(onesSegmentPins[i], (digits[onesDigit] & (1 << i)) != 0);
+digitalWrite(tensSegmentPins[i], (digits[tensDigit] & (1 << i)) != 0);
+}
+
+// Включение соответствующих цифровых дисплеев
+digitalWrite(onesDigitPin, HIGH);
+digitalWrite(tensDigitPin, HIGH);
+}
+
+
+
