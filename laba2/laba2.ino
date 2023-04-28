@@ -15,6 +15,8 @@ byte digitsArr[10] = {
   0b01101111, //9
 };
 
+
+int segPins[14]={0, 0, PB0, PB1, PB3, PB4, PB5, PB8, PB10, PB11, 0, 0, PB12, PB13}; //pb12, pb13 resistors
 int pause = 1;
 
 void setup() 
@@ -22,23 +24,23 @@ void setup()
   lcd.init();                       // запускаем экран 
   lcd.backlight();                  // Запускаем подсветку экрана
   for (int i=2;i<=13;i++){
-      pinMode(i, OUTPUT);
+      pinMode(segPins[i], OUTPUT);
   }
 }
 
 void showDigital (byte pos, byte digi){
-  digitalWrite(pos+9, LOW);
+  digitalWrite(segPins[pos+9], LOW);
   
   for (int i=12;i<=13;i++)
   {
-      digitalWrite(i, HIGH);
+      digitalWrite(segPins[i], HIGH);
   }
-  digitalWrite(pos+9, LOW);
+  digitalWrite(segPins[pos+9], LOW);
  delay(1);
- digitalWrite(pos+9, HIGH);
+ digitalWrite(segPins[pos+9], HIGH);
   for (int i=2;i<=9;i++)
   {
-    digitalWrite(i, bitRead(digitsArr[digi], i-2));
+    digitalWrite(segPins[i], bitRead(digitsArr[digi], i-2));
   }   
 }
 
@@ -57,7 +59,7 @@ void PotCheck(int digit){
 }
 
 void TumblerCheck(int digit){
-
+int tumbler_state=digitalRead(PA3); // поменять пин?
   if (tumbler_state>0)
   {
       int capacity=(digit)*145;                
@@ -77,7 +79,7 @@ void TumblerCheck(int digit){
 void loop() 
 {
     
-  int digit=map(analogRead(A0), 0, 1023, 1, 20);
+  int digit=map(analogRead(PA0), 0, 1023, 1, 20);
 
   PotCheck(digit);
   
