@@ -138,7 +138,7 @@ double P=(I*I)*r;
   lcd.setCursor(1,0);
    lcd.print(":");
   lcd.setCursor(2,0);
-   dtostrf(P, 2, 2, buffer);     // Формат до 1 знака после запятой
+   dtostrf(P, 2, 2, buffer);     // Формат до 2 знака после запятой
    lcd.print(buffer);
    lcd.print(" ");
 
