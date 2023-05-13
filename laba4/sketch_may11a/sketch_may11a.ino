@@ -21,15 +21,18 @@ double Ra[2]={15,0};
 double  one[2]={1,0};
 double  half[2]={0.5,0};
  double* res1;
- double* res2;
- double* res3;
- double* res4;
+  double* res2;
+  double* res3;
+  double* res4;
  double* res5;
  double* res6;
  double* res7;
- double* res8;
+  double* res8;
  double* res9;
- double* res10;
+  double* res10;
+  double* res100;
+  double* res200;
+  double* res_temp;
 void output_v(int v1,int v2,int v3,int v4,int v5,int v6,int v7)
 {
     lcd_v.setCursor(0,0);
@@ -204,9 +207,11 @@ if (s1==0 and s2==0 and s3==0){
 }else
 if (s1==1 and s2==1 and s3==0){
 
- res1=div_complex(Ua,Za);
+res_temp=div_complex(Ua,Za);
+ res1=res_temp;
 
-res2=div_complex(Ub,Zb);
+ res_temp=div_complex(Ub,Zb);
+res2=res_temp;
 Serial.println(res1[0]);
 Serial.println(res1[1]);
 res3=div_complex(Uc,Zc);
@@ -229,18 +234,18 @@ res8=sum_complex(res7, res3);
 static double* Unn=div_complex(res8, res10);
   
 
-  res1=sub_complex(Ua, Unn);
-  res2=sum_complex(Za, half);
- static  double* Ia=div_complex(res1, res2);
+  res100=sub_complex(Ua, Unn);
+  res200=sum_complex(Za, half);
+ static  double* Ia=div_complex(res100, res200);
 
 
-  res1=sub_complex(Ub, Unn);
-  res2=sum_complex(Zb, half);
-static   double* Ib=div_complex(res1, res2);
+   res100=sub_complex(Ub, Unn);
+  res200=sum_complex(Zb, half);
+static   double* Ib=div_complex(res100, res200);
 
-  res1=sub_complex(Uc, Unn);
-  res2=sum_complex(Zc, half);
-static   double* Ic=div_complex(res1, res2);
+   res100=sub_complex(Uc, Unn);
+  res200=sum_complex(Zc, half);
+static   double* Ic=div_complex(res100, res200);
 
   
   v4=trigform(mul_complex(Ia, Za));
