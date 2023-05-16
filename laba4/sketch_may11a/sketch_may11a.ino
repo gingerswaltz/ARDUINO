@@ -1,7 +1,7 @@
 #include "LCD_I2C.h" // библиотека для экранчика..
 LCD_I2C lcd_v( 0x27,20, 4); // инициализация объекта lcd
 LCD_I2C lcd_a( 0x26,16, 2); // инициализация объекта lcd
-char buffer[6]; // for a
+char buffer[4]; // for a
 
 double Ua[2]={230.0, 0.0};
 double Ub[2]={-115.0, 199.186};
@@ -20,19 +20,7 @@ double Rc[2]={15,0};
 double Ra[2]={15,0};
 double  one[2]={1,0};
 double  half[2]={0.5,0};
- double* res1;
-  double* res2;
-  double* res3;
-  double* res4;
- double* res5;
- double* res6;
- double* res7;
-  double* res8;
- double* res9;
-  double* res10;
-  double* res100;
-  double* res200;
-  double* res_temp;
+ 
 void output_v(int v1,int v2,int v3,int v4,int v5,int v6,int v7)
 {
     lcd_v.setCursor(0,0);
@@ -110,8 +98,8 @@ lcd_a.setCursor(1,0);
 lcd_a.print("1");
 lcd_a.setCursor(2,0);
 lcd_a.print(":");
-dtostrf(a1, 3, 1, buffer); 
-lcd_a.print(buffer);
+//dtostrf(a1, 3, 1, buffer); 
+lcd_a.print(round(a1*10)/10);
 
 lcd_a.setCursor(0,1);
 lcd_a.print("A");
@@ -119,8 +107,8 @@ lcd_a.setCursor(1,1);
 lcd_a.print("2");
 lcd_a.setCursor(2,1);
 lcd_a.print(":");
-dtostrf(a2, 3, 1, buffer); 
-lcd_a.print(buffer);
+//dtostrf(a2, 3, 1, buffer); 
+lcd_a.print(round(a2*10)/10);
 
 lcd_a.setCursor(8,0);
 lcd_a.print("A");
@@ -128,8 +116,8 @@ lcd_a.setCursor(9,0);
 lcd_a.print("3");
 lcd_a.setCursor(10,0);
 lcd_a.print(":");
-dtostrf(a3, 3, 1, buffer); 
-lcd_a.print(buffer);
+//dtostrf(a3, 3, 1, buffer); 
+lcd_a.print(round(a3*10)/10);
 
 lcd_a.setCursor(8,1);
 lcd_a.print("A");
@@ -137,43 +125,41 @@ lcd_a.setCursor(9,1);
 lcd_a.print("4");
 lcd_a.setCursor(10,1);
 lcd_a.print(":");
-dtostrf(a4, 3, 1, buffer); 
-lcd_a.print(buffer);
+//dtostrf(a4, 3, 1, buffer); 
+lcd_a.print(round(a4*10)/10);
 
   
 }
 
 
 
-double* sum_complex(double* a, double* b)
+void sum_complex(double* a, double* b,  double* &c)
 {
-  static double c[2];
+  c = new double[2];
   c[0] = a[0]+b[0];
   c[1] = a[1]+b[1];
-  return c;
 }
-double* sub_complex(double* a, double* b)
+void sub_complex(double* a, double* b, double* &c)
 {
-    static double c[2];
+    c = new double[2];
 c[0] = a[0]-b[0];
   c[1] = a[1]-b[1];
-    return c;
 }
-double* mul_complex(double* a, double* b)
+void mul_complex(double* a, double* b, double* &c)
 {
-  static double c[2];
-  c[0] = a[0]*b[0]-a[1]*b[1];
+      c = new double[2];
+c[0] = a[0]*b[0]-a[1]*b[1];
   c[1] = a[1]*b[0]-a[0]*b[1]; 
-  return c;
 }
 
-double* div_complex(double* a, double* b)
+void div_complex(double* a, double* b, double* &c)
 {
-  static double c[2];
-  c[0] = (a[0]*b[0]+b[1]*b[1])/(b[0]*b[0]+b[1]*b[1]);
-  c[1] = (a[1]*b[0]-b[1]*a[0])/(b[0]*b[0]+b[1]*b[1]);
-    return c;
+    c = new double[2];
+    c[0] = (a[0]*b[0]+b[1]*b[1])/(b[0]*b[0]+b[1]*b[1]);
+    c[1] = (a[1]*b[0]-b[1]*a[0])/(b[0]*b[0]+b[1]*b[1]);
 }
+
+
 
 double trigform(double* a){
   return sqrt(a[0]*a[0]+a[1]*a[1]);
@@ -195,6 +181,7 @@ void setup(){
 
 void loop(){
 //double* res=sum_complex(Ua, Ub);
+
 s1=1;
 s2=1;
 s3=0;
@@ -207,52 +194,58 @@ if (s1==0 and s2==0 and s3==0){
 }else
 if (s1==1 and s2==1 and s3==0){
 
-res_temp=div_complex(Ua,Za);
- res1=res_temp;
-
- res_temp=div_complex(Ub,Zb);
-res2=res_temp;
-Serial.println(res1[0]);
-Serial.println(res1[1]);
-res3=div_complex(Uc,Zc);
-
- res4=div_complex(one, Za);
-
-res5=div_complex(one, Zb);
+double* res1 = new double[2];
+ double* res2 = new double[2];
+double* res3 = new double[2];
+double* res4 = new double[2];
+double* res5 = new double[2];
+double* res6 = new double[2];
+double* res7 = new double[2];
+double* res8 = new double[2];
+double* res9 = new double[2];
+double* res10 = new double[2];
+double* Unn=new double[2];
  
-res6=div_complex(one, Zc);
-
- res7=sum_complex(res1, res2);
- 
-delay(2000);
-// Serial.println(res7[0]);
-//Serial.println(res7[1]);
-res8=sum_complex(res7, res3);
- res9=sum_complex(res4, res5);
- res10=sum_complex(res9, res6);
-
-static double* Unn=div_complex(res8, res10);
+    div_complex(Ua, Za, res1);
+    
+    div_complex(Ub, Zb, res2);
+   
+    div_complex(Uc, Zc, res3);
+    div_complex(one, Za, res4);
+    div_complex(one, Zb, res5);
+    div_complex(one, Zc, res6);
+    sum_complex(res1, res2, res7);
+    sum_complex(res7, res3, res8);
+    sum_complex(res4, res5, res9);
+    sum_complex(res9, res6, res10);
+    div_complex(res8, res10, Unn); // unn
   
 
-  res100=sub_complex(Ua, Unn);
-  res200=sum_complex(Za, half);
- static  double* Ia=div_complex(res100, res200);
+ sub_complex(Ua, Unn,res1);
+ sum_complex(Za, half, res2);
+ double* Ia=new double[2];
+ div_complex(res1, res2, Ia);
 
 
-   res100=sub_complex(Ub, Unn);
-  res200=sum_complex(Zb, half);
-static   double* Ib=div_complex(res100, res200);
+   sub_complex(Ub, Unn, res1);
+  sum_complex(Zb, half,res2);
+double* Ib=new double[2];
+div_complex(res1, res2, Ib);
 
-   res100=sub_complex(Uc, Unn);
-  res200=sum_complex(Zc, half);
-static   double* Ic=div_complex(res100, res200);
+  sub_complex(Uc, Unn, res1);
+ sum_complex(Zc, half, res2);
+double* Ic=new double [2];
+div_complex(res1, res2, Ic);
 
-  
-  v4=trigform(mul_complex(Ia, Za));
-  v5=trigform(mul_complex(Ib, Zb));
-  v6=trigform(mul_complex(Ic, Zc));
 
-  a1=trigform(Ia);
+mul_complex(Ia, Za, res1);
+ v4=trigform(res1);
+mul_complex(Ib, Zb, res1);
+ v5=trigform(res1);
+mul_complex(Ic, Zc, res1);
+  v6=trigform(res1);
+
+ a1=trigform(Ia);
  a2=trigform(Ib);
   a3=trigform(Ic);
 
@@ -263,8 +256,21 @@ static   double* Ic=div_complex(res100, res200);
 output_v(v1,v2,v3,v4,v5,v6,v7);
 output_a(a1,a2,a3,0);
   
+delete[] res1;
+delete[] res2;
+delete[] res3;
+delete[] res4;
+delete[] res5;
+delete[] res6;
+delete[] res7;
+delete[] res8;
+delete[] res9;
+delete[] res10;
+delete[] Unn;
+delete[]Ia;
+delete[]Ib;
+delete[]Ic;
+
+
 }
-
-    delay(1000);
-
 }
