@@ -131,31 +131,30 @@ lcd_a.print(buffer);
 
 
 
-void sum_complex(float* a, float* b,  float* &c)
+void sum_complex( float* a,  float* b, float* c)
 {
-  c = new float[2];
-  c[0] = a[0]+b[0];
-  c[1] = a[1]+b[1];
-}
-void sub_complex(float* a, float* b, float* &c)
-{
-    c = new float[2];
-c[0] = a[0]-b[0];
-  c[1] = a[1]-b[1];
-}
-void mul_complex(float* a, float* b, float* &c)
-{
-      c = new float[2];
-c[0] = a[0]*b[0]-a[1]*b[1];
-  c[1] = a[1]*b[0]-a[0]*b[1]; 
+  c[0] = a[0] + b[0];
+  c[1] = a[1] + b[1];
 }
 
-void div_complex(float* a, float* b, float* &c)
+void sub_complex( float* a,  float* b, float* c)
 {
-    c = new float[2];
-    c[0] = (a[0]*b[0]+b[1]*b[1])/(b[0]*b[0]+b[1]*b[1]);
-    c[1] = (a[1]*b[0]-b[1]*a[0])/(b[0]*b[0]+b[1]*b[1]);
+  c[0] = a[0] - b[0];
+  c[1] = a[1] - b[1];
 }
+
+void mul_complex( float* a,  float* b, float* c)
+{
+  c[0] = a[0] * b[0] - a[1] * b[1];
+  c[1] = a[1] * b[0] - a[0] * b[1];
+}
+
+void div_complex( float* a,  float* b, float* c)
+{
+  c[0] = (a[0] * b[0] + b[1] * b[1]) / (b[0] * b[0] + b[1] * b[1]);
+  c[1] = (a[1] * b[0] - b[1] * a[0]) / (b[0] * b[0] + b[1] * b[1]);
+}
+
 
 
 
@@ -168,11 +167,10 @@ void setup(){
    lcd_a.begin();
    lcd_v.backlight();
    lcd_a.backlight();
-   pinMode(PB10, INPUT);
-   pinMode(PB1, INPUT);
-  pinMode(PB11, INPUT);
-      Serial.begin(9600);
-
+   pinMode(10, INPUT);
+   pinMode(1, INPUT);
+  pinMode(11, INPUT);
+Serial.begin(115200);
     
     
 } 
@@ -181,34 +179,30 @@ void setup(){
 void loop(){
 float v1,v2,v3,v4,v5,v6,v7;
 float a1,a2,a3,a4;
-int s1=digitalRead(PB1);
-int s2=digitalRead(PB10);
-int s3=digitalRead(PB11);
-Serial.println(s1);
-Serial.println(s2);
+int s1=digitalRead(1);
+int s2=digitalRead(10);
+int s3=digitalRead(11);
 
-Serial.println(s3);
 if (s1==0 and s2==0 and s3==0){
   output_a(0,0,0,0);
   v1=trigform(Uab);
   v7=trigform(Ub);
   output_v(v1,0,0,0,0,0,v7);
-     delay(2500);
 
 }
 else
 if (s1==1 and s2==1 and s3==0){
-float* res1 = new float[2];
- float* res2 = new float[2];
-float* res3 = new float[2];
-float* res4 = new float[2];
-float* res5 = new float[2];
-float* res6 = new float[2];
-float* res7 = new float[2];
-float* res8 = new float[2];
-float* res9 = new float[2];
-float* res10 = new float[2];
-float* Unn=new float[2];
+float res1 [2];
+ float res2 [2];
+float res3 [2];
+float res4 [2];
+float res5 [2];
+float res6 [2];
+float res7  [2];
+float res8  [2];
+float res9  [2];
+float res10  [2];
+float Unn [2];
  
     div_complex(Ua, Za, res1);
     
@@ -220,34 +214,29 @@ float* Unn=new float[2];
     div_complex(one, Zc, res6);
     sum_complex(res1, res2, res7);
     sum_complex(res7, res3, res8);
-    delete[] res3;
     sum_complex(res4, res5, res9);
-    delete[] res4;
-    delete[] res5;
+     
 
     sum_complex(res9, res6, res10);
-    delete[] res6;
-delete[] res7;
-delete[] res9;
+  
 
     div_complex(res8, res10, Unn); // unn
-  delete[] res8;
-delete[] res10;
+  
 
  sub_complex(Ua, Unn,res1);
  sum_complex(Za, half, res2);
- float* Ia=new float[2];
+ float Ia[2];
  div_complex(res1, res2, Ia);
 
 
    sub_complex(Ub, Unn, res1);
   sum_complex(Zb, half,res2);
-float* Ib=new float[2];
+float Ib [2];
 div_complex(res1, res2, Ib);
 
   sub_complex(Uc, Unn, res1);
  sum_complex(Zc, half, res2);
-float* Ic=new float [2];
+float Ic  [2];
 div_complex(res1, res2, Ic);
 
 
@@ -268,28 +257,20 @@ mul_complex(Ic, Zc, res1);
   v7=trigform(Unn);
 output_v(v1,v2,v3,v4,v5,v6,v7);
 output_a(a1,a2,a3,0);
- delay(2500);
-delete[] res1;
-delete[] res2;
-
-
-delete[] Unn;
-delete[]Ia;
-delete[]Ib;
-delete[]Ic;
+  
 
 }
 
 else 
 if(s1==1 and s2==0 and s3==0){
-  float* res1 = new float[2];
- float* res2 = new float[2];
+  float res1  [2];
+ float res2  [2];
 
-float* Un=new float[2];
+float Un [2];
 
 sum_complex(Za, Zb, res1);
 sum_complex(res1, one, res2);
-float* Ia=new float[2];
+float Ia [2];
 div_complex(Uab, res2, Ia); // A1
 mul_complex(Ia, Za, res1);
 sub_complex(Ua, res1, Un);
@@ -310,18 +291,14 @@ a3=0;
 a4=0;
 output_v(v1,v2,v3,v4,v5,v6,v7);
 output_a(a1,a2,a3,a4);
- delay(10000);
-delete[] res1;
-delete[] res2;
-delete[] Un;
-delete[] Ia;
+  
 } else 
 if(s1==0 and s2==1 and s3==0){
-  float* res1 = new float[2];
- float* res2 = new float[2];
+  float res1  [2];
+ float res2  [2];
 sum_complex(Zb, Zc, res1);
 sum_complex(res1, one, res2);
-float* Ib=new float[2];
+float Ib[2];
 div_complex(Ubc, res2, Ib); // A2
 a2=trigform(Ib);
 a3=a2;
@@ -342,19 +319,15 @@ v7=trigform(res2);
 
 output_v(v1,v2,v3,v4,v5,v6,v7);
 output_a(a1,a2,a3,a4);
- delay(2500);
 
-delete[] res1;
-delete[] res2;
-delete[] Ib;
-
+ 
 
 
 }else 
 if(s1==0 and s2==0 and s3==1){
-  float* res1 = new float[2];
+  float res1  [2];
   a1=0;
-  float* Ib = new float[2];
+  float Ib  [2];
   div_complex(Ub, Zb, Ib);
   a2=trigform(Ib);
   a3=0;
@@ -371,19 +344,14 @@ if(s1==0 and s2==0 and s3==1){
 
 output_v(v1,v2,v3,v4,v5,v6,v7);
 output_a(a1,a2,a3,a4);
- delay(2500);
-
-  delete[] res1;
-
-delete[] Ib;
 
 }else 
 if(s1==1 and s2==1 and s3==1){
-  float* res1 = new float[2];
- float* res2 = new float[2];
-float* Ia = new float[2];
- float* Ib = new float[2];
- float* Ic = new float[2];
+  float res1  [2];
+ float res2  [2];
+float Ia  [2];
+ float Ib  [2];
+ float Ic  [2];
 
 sum_complex(Za, half, res1);
 div_complex(Ua, res1, Ia);
@@ -411,21 +379,15 @@ v1=trigform(Uab);
 
 output_v(v1,v2,v3,v4,v5,v6,v7);
 output_a(a1,a2,a3,a4);
- delay(2500);
 
-delete[] res1;
-delete[] res2;
-delete[] Ia;
-delete[] Ib;
-delete[] Ic;
 
 
 }else
 if(s1==0 and s2==1 and s3==1){
-   float* res1 = new float[2];
- float* res2 = new float[2];
- float* Ib = new float[2];
- float* Ic = new float[2];
+   float res1  [2];
+ float res2  [2];
+ float Ib  [2];
+ float Ic  [2];
 
 a1=0;
 sum_complex(Zb, half, res1);
@@ -448,20 +410,16 @@ v1=trigform(Uab);
  v7=0;
  output_v(v1,v2,v3,v4,v5,v6,v7);
 output_a(a1,a2,a3,a4);
- delay(2500);
 
-delete[] res1;
-delete[] res2;
-delete[] Ib;
-delete[] Ic;
+ 
 
 
 }else 
 if(s1==1 and s2==0 and s3==1){
-   float* res1 = new float[2];
- float* res2 = new float[2];
- float* Ia = new float[2];
- float* Ib = new float[2];
+   float res1  [2];
+ float res2  [2];
+ float Ia  [2];
+ float Ib  [2];
 
 sum_complex(Za, half, res1);
 div_complex(Ua, res1, Ia);
@@ -483,12 +441,7 @@ v6=0;
 v7=v6;
  output_v(v1,v2,v3,v4,v5,v6,v7);
 output_a(a1,a2,a3,a4);
- delay(2500);
 
-delete[] res1;
-delete[] res2;
-delete[] Ib;
-delete[] Ia;
+ 
 }
-
 }
