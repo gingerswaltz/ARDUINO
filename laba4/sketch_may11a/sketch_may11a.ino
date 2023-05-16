@@ -98,8 +98,8 @@ lcd_a.setCursor(1,0);
 lcd_a.print("1");
 lcd_a.setCursor(2,0);
 lcd_a.print(":");
-//dtostrf(a1, 3, 1, buffer); 
-lcd_a.print(round(a1*10)/10);
+dtostrf(a1, 3, 1, buffer); 
+lcd_a.print(buffer);
 
 lcd_a.setCursor(0,1);
 lcd_a.print("A");
@@ -107,8 +107,8 @@ lcd_a.setCursor(1,1);
 lcd_a.print("2");
 lcd_a.setCursor(2,1);
 lcd_a.print(":");
-//dtostrf(a2, 3, 1, buffer); 
-lcd_a.print(round(a2*10)/10);
+dtostrf(a2, 3, 1, buffer); 
+lcd_a.print(buffer);
 
 lcd_a.setCursor(8,0);
 lcd_a.print("A");
@@ -116,8 +116,8 @@ lcd_a.setCursor(9,0);
 lcd_a.print("3");
 lcd_a.setCursor(10,0);
 lcd_a.print(":");
-//dtostrf(a3, 3, 1, buffer); 
-lcd_a.print(round(a3*10)/10);
+dtostrf(a3, 3, 1, buffer); 
+lcd_a.print(buffer);
 
 lcd_a.setCursor(8,1);
 lcd_a.print("A");
@@ -125,8 +125,8 @@ lcd_a.setCursor(9,1);
 lcd_a.print("4");
 lcd_a.setCursor(10,1);
 lcd_a.print(":");
-//dtostrf(a4, 3, 1, buffer); 
-lcd_a.print(round(a4*10)/10);
+dtostrf(a4, 3, 1, buffer); 
+lcd_a.print(buffer);
 
   
 }
@@ -183,8 +183,8 @@ void loop(){
 //double* res=sum_complex(Ua, Ub);
 
 s1=1;
-s2=1;
-s3=0;
+s2=0;
+s3=1;
 if (s1==0 and s2==0 and s3==0){
   output_a(0,0,0,0);
   v1=trigform(Uab);
@@ -270,7 +270,201 @@ delete[] Unn;
 delete[]Ia;
 delete[]Ib;
 delete[]Ic;
+}else 
+if(s1==1 and s2==0 and s3==0){
+  double* res1 = new double[2];
+ double* res2 = new double[2];
 
+double* Un=new double[2];
 
+sum_complex(Za, Zb, res1);
+sum_complex(res1, one, res2);
+double* Ia=new double[2];
+div_complex(Uab, res2, Ia); // A1
+mul_complex(Ia, Za, res1);
+sub_complex(Ua, res1, Un);
+sub_complex(Ub, Un, res1); // v2
+v2=trigform(res1);
+sub_complex(Ua, Un, res1);
+v3=trigform(res1);
+mul_complex(Ia, Za, res1);
+v4=trigform(res1);
+mul_complex(Ia, Zb, res1);
+v5=trigform(res1);
+v6=0;
+v7=trigform(Un);
+v1=trigform(Uab);
+a1=trigform(Ia);
+a2=a1;
+a3=0;
+a4=0;
+output_v(v1,v2,v3,v4,v5,v6,v7);
+output_a(a1,a2,a3,a4);
+delete[] res1;
+delete[] res2;
+delete[] Un;
+delete[] Ia;
+} else 
+if(s1==0 and s2==1 and s3==0){
+  
+  double* res1 = new double[2];
+ double* res2 = new double[2];
+sum_complex(Zb, Zc, res1);
+sum_complex(res1, one, res2);
+double* Ib=new double[2];
+div_complex(Ubc, res2, Ib); // A2
+a2=trigform(Ib);
+a3=a2;
+a4=0;
+a1=0;
+
+v1=trigform(Uab);
+v2=trigform(Ubc);
+v3=trigform(Uca);
+v4=0;
+mul_complex(Ib, Zb, res1);
+v5=trigform(res1);
+mul_complex(Ib,Zc,res1);
+v6=trigform(res1);
+mul_complex(Ib, Zb, res1);
+sub_complex(Ub, res1,res2);
+v7=trigform(res2);
+
+output_v(v1,v2,v3,v4,v5,v6,v7);
+output_a(a1,a2,a3,a4);
+delete[] res1;
+delete[] res2;
+delete[] Ib;
+}else 
+if(s1==0 and s2==0 and s3==1){
+ 
+  double* res1 = new double[2];
+  a1=0;
+  double* Ib = new double[2];
+  div_complex(Ub, Zb, Ib);
+  a2=trigform(Ib);
+  a3=0;
+  a4=a2;
+
+  v1=trigform(Uab);
+  v2=trigform(Ub);
+  v3=trigform(Ua);
+  v4=0;
+  mul_complex(Ib,Zb, res1);
+  v5=trigform(res1);
+  v6=0;
+  v7=0;
+
+output_v(v1,v2,v3,v4,v5,v6,v7);
+output_a(a1,a2,a3,a4);
+
+  delete[] res1;
+
+delete[] Ib;
+}else 
+if(s1==1 and s2==1 and s3==1){
+  double* res1 = new double[2];
+ double* res2 = new double[2];
+double* Ia = new double[2];
+ double* Ib = new double[2];
+ double* Ic = new double[2];
+
+sum_complex(Za, half, res1);
+div_complex(Ua, res1, Ia);
+a1=trigform(Ia);
+sum_complex(Zb, half, res1);
+div_complex(Ub, res1, Ib);
+a2=trigform(Ib);
+sum_complex(Zc, half, res1);
+div_complex(Uc, res1, Ic);
+a3=trigform(Ic);
+sum_complex(Ia, Ib, res1);
+sum_complex(Ic, res1, res2);
+a4=trigform(res2);
+
+v1=trigform(Uab);
+  v2=trigform(Ubc);
+  v3=trigform(Uca);
+  mul_complex(Ia,Za, res1);
+  v4=trigform(res1);
+    mul_complex(Ib,Zb, res1);
+  v5=trigform(res1);
+    mul_complex(Ic,Zc, res1);
+  v6=trigform(res1);
+  v7=0;
+
+output_v(v1,v2,v3,v4,v5,v6,v7);
+output_a(a1,a2,a3,a4);
+delete[] res1;
+delete[] res2;
+delete[] Ia;
+delete[] Ib;
+delete[] Ic;
+
+}else
+if(s1==0 and s2==1 and s3==1){
+   double* res1 = new double[2];
+ double* res2 = new double[2];
+ double* Ib = new double[2];
+ double* Ic = new double[2];
+
+a1=0;
+sum_complex(Zb, half, res1);
+div_complex(Ub, res1, Ib);
+a2=trigform(Ib);
+sum_complex(Zc, half, res1);
+div_complex(Uc, res1, Ic);
+a3=trigform(Ic);
+sum_complex(Ib, Ic, res1);
+a4=trigform(res1);
+
+v1=trigform(Uab);
+  v2=trigform(Ubc);
+  v3=trigform(Uca);
+  v4=0;
+ mul_complex(Ib, Zb, res1);
+ v5=trigform(res1);
+  mul_complex(Ic, Zc, res1);
+ v6=trigform(res1);
+ v7=0;
+ output_v(v1,v2,v3,v4,v5,v6,v7);
+output_a(a1,a2,a3,a4);
+delete[] res1;
+delete[] res2;
+delete[] Ib;
+delete[] Ic;
+}else 
+if(s1==1 and s2==0 and s3==1){
+  
 }
+ double* res1 = new double[2];
+ double* res2 = new double[2];
+ double* Ia = new double[2];
+ double* Ib = new double[2];
+
+sum_complex(Za, half, res1);
+div_complex(Ua, res1, Ia);
+a1=trigform(Ia);
+sum_complex(Zb, half, res1);
+div_complex(Ub, res1, Ib);
+a2=trigform(Ib);
+a3=0;
+sum_complex(Ia, Ib, res1);
+a4=trigform(res1);
+v1=trigform(Uab);
+v2=trigform(Ub);
+v3=trigform(Ua);
+mul_complex(Ia, Za, res1);
+v4=trigform(res1);
+mul_complex(Ib, Zb, res1);
+v5=trigform(res1);
+v6=0;
+v7=v6;
+ output_v(v1,v2,v3,v4,v5,v6,v7);
+output_a(a1,a2,a3,a4);
+delete[] res1;
+delete[] res2;
+delete[] Ib;
+delete[] Ia;
+
 }
