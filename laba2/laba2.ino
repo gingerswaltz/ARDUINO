@@ -1,7 +1,10 @@
 #include "LiquidCrystal_I2C.h" // библиотека для экранчика..
-#include <Wire.h>
+#include <TM1637.h>
+
 const double pi=3.14;
 LiquidCrystal_I2C lcd( 0x27,20, 4); // инициализация объекта lcd
+TM1637 tm1637(PB8,PB9);
+
 char buffer [6];
 byte digitsArr[10] = {
   0b00111111, //0
@@ -22,17 +25,14 @@ double r, XL;
  double u=50;
  double _xx=0;
 
-int segPins[14]={0, 0, PB0, PB1, PB3, PB4, PB5, PB8, PB10, PB11, 0, 0, PB12, PB13}; //pb12, pb13 resistors
-int pause = 1;
 void setup() 
 {
-  for (int i=2;i<=13;i++){
-      pinMode(segPins[i], OUTPUT);
-  }
+  
   randomSeed(analogRead(PB9));      // задаем зерно рандомной генерации  
  r=r_mas[random(0,4)];
  XL=XL_mas[random(0,5)];
-
+tm1637.init();
+  tm1637.set(BRIGHTEST);//BRIGHT_TYPICAL = 2,BRIGHT_DARKEST = 0,BRIGHTEST = 7;
  lcd.init();                       // запускаем экран 
 lcd.backlight();                  // Запускаем подсветку экрана
  Serial.begin(115200);
@@ -45,34 +45,17 @@ pinMode(PB15, INPUT);
 
 
 
-void showDigital (byte pos, byte digi){
- // digitalWrite(segPins[pos+9], LOW);
-  
-  for (int i=12;i<=13;i++)
-  {
-      digitalWrite(segPins[i], HIGH);
-  }
-  digitalWrite(segPins[pos+9], LOW);
-  delay(1);
-
- digitalWrite(segPins[pos+9], HIGH);
-  for (int i=2;i<=9;i++)
-  {
-    digitalWrite(segPins[i], bitRead(digitsArr[digi], i-2));
-  }   
-
-}
 
 void PotCheck(int digit){  
   int digit_ed=digit%10;
   if (digit>9)
   {
-    showDigital (3, digit/10);
-    showDigital (4, digit_ed);
+    tm1637.display(1, digit/10);
+    tm1637.display(2, digit_ed);
   }else
   {
-  showDigital (3, 0);
-  showDigital (4, digit);
+  tm1637.display(1, 0);
+  tm1637.display(2, digit);
   }
 
 }
@@ -98,26 +81,31 @@ int tumbler_state=digitalRead(PB15);
 if (tumbler_state>0)
 {
   digit=0;
+  tm1637.clearDisplay();
+  tm1637.set(0);
   xc=0;
   U2=0;
   
 } else 
 {
     digit=map(analogRead(PA0), 20, 4095, 1, 21);
+    digit=constrain(digit, 1, 20);
     xc=(1000000)/(2*pi*50*digit);
+      tm1637.set(7);
 
+    PotCheck(digit);
 }
 
-lcd.setCursor(7,1);
-    lcd.print("C");
-    lcd.setCursor(8,1);
-    lcd.print(":");
-    lcd.setCursor(9,1);
-    lcd.print(digit/10);
-    lcd.setCursor(10,1);
-    lcd.print(digit%10);
-    lcd.setCursor(11,1);
-    lcd.print("mF");    
+//lcd.setCursor(7,1);
+//    lcd.print("C");
+//    lcd.setCursor(8,1);
+//    lcd.print(":");
+//    lcd.setCursor(9,1);
+//    lcd.print(digit/10);
+//    lcd.setCursor(10,1);
+//    lcd.print(digit%10);
+//    lcd.setCursor(11,1);
+//    lcd.print("mF");    
     
  _xx=XL-xc;
  Z=sqrt(r*r+_xx*_xx);

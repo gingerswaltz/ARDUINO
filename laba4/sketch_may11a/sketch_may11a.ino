@@ -3,23 +3,21 @@ LCD_I2C lcd_v( 0x27,20, 4); // инициализация объекта lcd
 LCD_I2C lcd_a( 0x26,16, 2); // инициализация объекта lcd
 char buffer[4]; // for a
 
-double Ua[2]={230.0, 0.0};
-double Ub[2]={-115.0, 199.186};
-double Uc[2]={-115.0, -199.186};
-double Uab[2]={Ua[0]-Ub[0], Ua[1]-Ub[1]};
-double Ubc[2]={Ub[0]-Uc[0], Ub[1]-Uc[1]};
-double Uca[2]={Uc[0]-Ua[0], Uc[1]-Ua[1]};
-double Za[2]={15,0};
-double Zb[2]={45,0};
-double Zc[2]={15,0};
-double v1,v2,v3,v4,v5,v6,v7;
-double a1,a2,a3,a4;
-int s1,s2,s3=0;
-double Rb[2]={45,0};
-double Rc[2]={15,0};
-double Ra[2]={15,0};
-double  one[2]={1,0};
-double  half[2]={0.5,0};
+float Ua[2]={230.0, 0.0};
+float Ub[2]={-115.0, 199.186};
+float Uc[2]={-115.0, -199.186};
+float Uab[2]={Ua[0]-Ub[0], Ua[1]-Ub[1]};
+float Ubc[2]={Ub[0]-Uc[0], Ub[1]-Uc[1]};
+float Uca[2]={Uc[0]-Ua[0], Uc[1]-Ua[1]};
+float Za[2]={15,0};
+float Zb[2]={45,0};
+float Zc[2]={15,0};
+
+float Rb[2]={45,0};
+float Rc[2]={15,0};
+float Ra[2]={15,0};
+float  one[2]={1,0};
+float  half[2]={0.5,0};
  
 void output_v(int v1,int v2,int v3,int v4,int v5,int v6,int v7)
 {
@@ -32,7 +30,7 @@ void output_v(int v1,int v2,int v3,int v4,int v5,int v6,int v7)
     lcd_v.setCursor(3,0);
    
     lcd_v.print(v1);
-
+lcd_v.print("  ");
     lcd_v.setCursor(0,1);
     lcd_v.print("V");
     lcd_v.setCursor(1,1);
@@ -41,7 +39,7 @@ void output_v(int v1,int v2,int v3,int v4,int v5,int v6,int v7)
     lcd_v.print(":");
     lcd_v.setCursor(3,1);
     lcd_v.print(v2);
-
+  lcd_v.print("  ");
     lcd_v.setCursor(0,2);
     lcd_v.print("V");
     lcd_v.setCursor(1,2);
@@ -50,7 +48,7 @@ void output_v(int v1,int v2,int v3,int v4,int v5,int v6,int v7)
     lcd_v.print(":");
     lcd_v.setCursor(3,2);
     lcd_v.print(v3);
-
+lcd_v.print("  ");
     lcd_v.setCursor(10,0);
     lcd_v.print("V");
     lcd_v.setCursor(11,0);
@@ -59,7 +57,7 @@ void output_v(int v1,int v2,int v3,int v4,int v5,int v6,int v7)
     lcd_v.print(":");
     lcd_v.setCursor(13,0);
     lcd_v.print(v4);
-
+lcd_v.print("  ");
     lcd_v.setCursor(10,1);
     lcd_v.print("V");
     lcd_v.setCursor(11,1);
@@ -68,7 +66,7 @@ void output_v(int v1,int v2,int v3,int v4,int v5,int v6,int v7)
     lcd_v.print(":");
     lcd_v.setCursor(13,1);
     lcd_v.print(v5);
-
+lcd_v.print("  ");
      lcd_v.setCursor(10,2);
     lcd_v.print("V");
     lcd_v.setCursor(11,2);
@@ -77,7 +75,7 @@ void output_v(int v1,int v2,int v3,int v4,int v5,int v6,int v7)
     lcd_v.print(":");
    lcd_v.setCursor(13,2);
     lcd_v.print(v6);
-
+lcd_v.print("  ");
      lcd_v.setCursor(10,3);
     lcd_v.print("V");
     lcd_v.setCursor(11,3);
@@ -86,11 +84,11 @@ void output_v(int v1,int v2,int v3,int v4,int v5,int v6,int v7)
     lcd_v.print(":");
     lcd_v.setCursor(13,3);
     lcd_v.print(v7);
-    
+    lcd_v.print("  ");
     
 }
 
-void output_a(double a1, double a2, double a3, double a4)
+void output_a(float a1, float a2, float a3, float a4)
 {
 lcd_a.setCursor(0,0);
 lcd_a.print("A");
@@ -133,35 +131,35 @@ lcd_a.print(buffer);
 
 
 
-void sum_complex(double* a, double* b,  double* &c)
+void sum_complex(float* a, float* b,  float* &c)
 {
-  c = new double[2];
+  c = new float[2];
   c[0] = a[0]+b[0];
   c[1] = a[1]+b[1];
 }
-void sub_complex(double* a, double* b, double* &c)
+void sub_complex(float* a, float* b, float* &c)
 {
-    c = new double[2];
+    c = new float[2];
 c[0] = a[0]-b[0];
   c[1] = a[1]-b[1];
 }
-void mul_complex(double* a, double* b, double* &c)
+void mul_complex(float* a, float* b, float* &c)
 {
-      c = new double[2];
+      c = new float[2];
 c[0] = a[0]*b[0]-a[1]*b[1];
   c[1] = a[1]*b[0]-a[0]*b[1]; 
 }
 
-void div_complex(double* a, double* b, double* &c)
+void div_complex(float* a, float* b, float* &c)
 {
-    c = new double[2];
+    c = new float[2];
     c[0] = (a[0]*b[0]+b[1]*b[1])/(b[0]*b[0]+b[1]*b[1]);
     c[1] = (a[1]*b[0]-b[1]*a[0])/(b[0]*b[0]+b[1]*b[1]);
 }
 
 
 
-double trigform(double* a){
+float trigform(float* a){
   return sqrt(a[0]*a[0]+a[1]*a[1]);
 }
 void setup(){
@@ -170,8 +168,9 @@ void setup(){
    lcd_a.begin();
    lcd_v.backlight();
    lcd_a.backlight();
- 
-
+   pinMode(PB10, INPUT);
+   pinMode(PB1, INPUT);
+  pinMode(PB11, INPUT);
       Serial.begin(9600);
 
     
@@ -180,31 +179,36 @@ void setup(){
 
 
 void loop(){
-//double* res=sum_complex(Ua, Ub);
+float v1,v2,v3,v4,v5,v6,v7;
+float a1,a2,a3,a4;
+int s1=digitalRead(PB1);
+int s2=digitalRead(PB10);
+int s3=digitalRead(PB11);
+Serial.println(s1);
+Serial.println(s2);
 
-s1=1;
-s2=0;
-s3=1;
+Serial.println(s3);
 if (s1==0 and s2==0 and s3==0){
   output_a(0,0,0,0);
   v1=trigform(Uab);
   v7=trigform(Ub);
   output_v(v1,0,0,0,0,0,v7);
-  
-}else
-if (s1==1 and s2==1 and s3==0){
+     delay(2500);
 
-double* res1 = new double[2];
- double* res2 = new double[2];
-double* res3 = new double[2];
-double* res4 = new double[2];
-double* res5 = new double[2];
-double* res6 = new double[2];
-double* res7 = new double[2];
-double* res8 = new double[2];
-double* res9 = new double[2];
-double* res10 = new double[2];
-double* Unn=new double[2];
+}
+else
+if (s1==1 and s2==1 and s3==0){
+float* res1 = new float[2];
+ float* res2 = new float[2];
+float* res3 = new float[2];
+float* res4 = new float[2];
+float* res5 = new float[2];
+float* res6 = new float[2];
+float* res7 = new float[2];
+float* res8 = new float[2];
+float* res9 = new float[2];
+float* res10 = new float[2];
+float* Unn=new float[2];
  
     div_complex(Ua, Za, res1);
     
@@ -216,25 +220,34 @@ double* Unn=new double[2];
     div_complex(one, Zc, res6);
     sum_complex(res1, res2, res7);
     sum_complex(res7, res3, res8);
+    delete[] res3;
     sum_complex(res4, res5, res9);
+    delete[] res4;
+    delete[] res5;
+
     sum_complex(res9, res6, res10);
+    delete[] res6;
+delete[] res7;
+delete[] res9;
+
     div_complex(res8, res10, Unn); // unn
-  
+  delete[] res8;
+delete[] res10;
 
  sub_complex(Ua, Unn,res1);
  sum_complex(Za, half, res2);
- double* Ia=new double[2];
+ float* Ia=new float[2];
  div_complex(res1, res2, Ia);
 
 
    sub_complex(Ub, Unn, res1);
   sum_complex(Zb, half,res2);
-double* Ib=new double[2];
+float* Ib=new float[2];
 div_complex(res1, res2, Ib);
 
   sub_complex(Uc, Unn, res1);
  sum_complex(Zc, half, res2);
-double* Ic=new double [2];
+float* Ic=new float [2];
 div_complex(res1, res2, Ic);
 
 
@@ -255,31 +268,28 @@ mul_complex(Ic, Zc, res1);
   v7=trigform(Unn);
 output_v(v1,v2,v3,v4,v5,v6,v7);
 output_a(a1,a2,a3,0);
-  
+ delay(2500);
 delete[] res1;
 delete[] res2;
-delete[] res3;
-delete[] res4;
-delete[] res5;
-delete[] res6;
-delete[] res7;
-delete[] res8;
-delete[] res9;
-delete[] res10;
+
+
 delete[] Unn;
 delete[]Ia;
 delete[]Ib;
 delete[]Ic;
-}else 
-if(s1==1 and s2==0 and s3==0){
-  double* res1 = new double[2];
- double* res2 = new double[2];
 
-double* Un=new double[2];
+}
+
+else 
+if(s1==1 and s2==0 and s3==0){
+  float* res1 = new float[2];
+ float* res2 = new float[2];
+
+float* Un=new float[2];
 
 sum_complex(Za, Zb, res1);
 sum_complex(res1, one, res2);
-double* Ia=new double[2];
+float* Ia=new float[2];
 div_complex(Uab, res2, Ia); // A1
 mul_complex(Ia, Za, res1);
 sub_complex(Ua, res1, Un);
@@ -300,18 +310,18 @@ a3=0;
 a4=0;
 output_v(v1,v2,v3,v4,v5,v6,v7);
 output_a(a1,a2,a3,a4);
+ delay(10000);
 delete[] res1;
 delete[] res2;
 delete[] Un;
 delete[] Ia;
 } else 
 if(s1==0 and s2==1 and s3==0){
-  
-  double* res1 = new double[2];
- double* res2 = new double[2];
+  float* res1 = new float[2];
+ float* res2 = new float[2];
 sum_complex(Zb, Zc, res1);
 sum_complex(res1, one, res2);
-double* Ib=new double[2];
+float* Ib=new float[2];
 div_complex(Ubc, res2, Ib); // A2
 a2=trigform(Ib);
 a3=a2;
@@ -332,15 +342,19 @@ v7=trigform(res2);
 
 output_v(v1,v2,v3,v4,v5,v6,v7);
 output_a(a1,a2,a3,a4);
+ delay(2500);
+
 delete[] res1;
 delete[] res2;
 delete[] Ib;
+
+
+
 }else 
 if(s1==0 and s2==0 and s3==1){
- 
-  double* res1 = new double[2];
+  float* res1 = new float[2];
   a1=0;
-  double* Ib = new double[2];
+  float* Ib = new float[2];
   div_complex(Ub, Zb, Ib);
   a2=trigform(Ib);
   a3=0;
@@ -357,17 +371,19 @@ if(s1==0 and s2==0 and s3==1){
 
 output_v(v1,v2,v3,v4,v5,v6,v7);
 output_a(a1,a2,a3,a4);
+ delay(2500);
 
   delete[] res1;
 
 delete[] Ib;
+
 }else 
 if(s1==1 and s2==1 and s3==1){
-  double* res1 = new double[2];
- double* res2 = new double[2];
-double* Ia = new double[2];
- double* Ib = new double[2];
- double* Ic = new double[2];
+  float* res1 = new float[2];
+ float* res2 = new float[2];
+float* Ia = new float[2];
+ float* Ib = new float[2];
+ float* Ic = new float[2];
 
 sum_complex(Za, half, res1);
 div_complex(Ua, res1, Ia);
@@ -395,18 +411,21 @@ v1=trigform(Uab);
 
 output_v(v1,v2,v3,v4,v5,v6,v7);
 output_a(a1,a2,a3,a4);
+ delay(2500);
+
 delete[] res1;
 delete[] res2;
 delete[] Ia;
 delete[] Ib;
 delete[] Ic;
 
+
 }else
 if(s1==0 and s2==1 and s3==1){
-   double* res1 = new double[2];
- double* res2 = new double[2];
- double* Ib = new double[2];
- double* Ic = new double[2];
+   float* res1 = new float[2];
+ float* res2 = new float[2];
+ float* Ib = new float[2];
+ float* Ic = new float[2];
 
 a1=0;
 sum_complex(Zb, half, res1);
@@ -429,18 +448,20 @@ v1=trigform(Uab);
  v7=0;
  output_v(v1,v2,v3,v4,v5,v6,v7);
 output_a(a1,a2,a3,a4);
+ delay(2500);
+
 delete[] res1;
 delete[] res2;
 delete[] Ib;
 delete[] Ic;
+
+
 }else 
 if(s1==1 and s2==0 and s3==1){
-  
-}
- double* res1 = new double[2];
- double* res2 = new double[2];
- double* Ia = new double[2];
- double* Ib = new double[2];
+   float* res1 = new float[2];
+ float* res2 = new float[2];
+ float* Ia = new float[2];
+ float* Ib = new float[2];
 
 sum_complex(Za, half, res1);
 div_complex(Ua, res1, Ia);
@@ -462,9 +483,12 @@ v6=0;
 v7=v6;
  output_v(v1,v2,v3,v4,v5,v6,v7);
 output_a(a1,a2,a3,a4);
+ delay(2500);
+
 delete[] res1;
 delete[] res2;
 delete[] Ib;
 delete[] Ia;
+}
 
 }
