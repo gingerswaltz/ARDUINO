@@ -12,10 +12,11 @@ float Uca[2]={Uc[0]-Ua[0], Uc[1]-Ua[1]};
 float Za[2]={15,0};
 float Zb[2]={45,0};
 float Zc[2]={15,0};
-
-float Rb[2]={45,0};
-float Rc[2]={15,0};
-float Ra[2]={15,0};
+float Ra,Rb,Rc;
+//
+//float Rb[2]={45,0};
+//float Rc[2]={15,0};
+//float Ra[2]={15,0};
 float  one[2]={1,0};
 float  half[2]={0.5,0};
  
@@ -161,28 +162,62 @@ void div_complex( float* a,  float* b, float* c)
 float trigform(float* a){
   return sqrt(a[0]*a[0]+a[1]*a[1]);
 }
+
+
 void setup(){
    
    lcd_v.begin();
    lcd_a.begin();
    lcd_v.backlight();
    lcd_a.backlight();
-   pinMode(10, INPUT);
-   pinMode(1, INPUT);
-  pinMode(11, INPUT);
-Serial.begin(115200);
-    
+   pinMode(PA10, INPUT);
+   pinMode(PA1, INPUT);
+  pinMode(PA11, INPUT);
+  pinMode(PB12, INPUT);
+Serial.begin(9600);
+
+   
     
 } 
+
 
 
 void loop(){
 float v1,v2,v3,v4,v5,v6,v7;
 float a1,a2,a3,a4;
-int s1=digitalRead(1);
-int s2=digitalRead(10);
-int s3=digitalRead(11);
+//Serial.println(digitalRead(PB1));
+//Serial.println(digitalRead(PB11));
+//Serial.println(digitalRead(PB10));
+int s1=digitalRead(PB1);
+int s2=digitalRead(PB10);
+int s3=digitalRead(PB11);
+int s4=digitalRead(PB12);
+float Za[2]={0,0};
+float Zb[2]={0,0};
+float Zc[2]={0,0};
+float Ra,Rb,Rc;
 
+Ra=map(analogRead(PA0), 20, 4095, 1, 101); //Ra  - PA0
+Ra=constrain(Ra, 1, 100);
+
+Za[0] = Ra;
+Rb=map(analogRead(PA1), 20, 4095, 1, 101); //Rb - PA1
+Rb=constrain(Rb, 1, 100);
+
+Zb[0] = Rb;
+Rc=map(analogRead(PA2), 20, 4095, 1, 101); //Rc - PA2
+Rc=constrain(Rc, 1, 100);
+delay(250);
+Zc[0] = Rc;
+// проверка свича s4  порт PB12
+if (s4 == 1){
+  Zb[1] = -Rb;
+  Zb[0] = 0;
+}
+else{
+  Zb[0] = Rb;
+  Zb[1] = 0;
+}
 if (s1==0 and s2==0 and s3==0){
   output_a(0,0,0,0);
   v1=trigform(Uab);
