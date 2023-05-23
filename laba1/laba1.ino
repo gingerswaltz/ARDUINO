@@ -39,12 +39,12 @@ void setup() {
 void loop() {
    randomSeed(analogRead(PB1));
    int tumbler_state = digitalRead(PB10); // Считываем положение тумблера..
-   eps = (random(995, 1005));
+   eps = (random(998, 1005));
 
    if (tumbler_state == 1) // Если включено, то у нас режим "КЗ"
    {
       rn = analogRead(PA0) * ((10 * r_eg) / 4096); // Считываем значение Rн с потенциометра
-      delay(500); // Задержка для корректного вывода
+      delay(1000); // Задержка для корректного вывода
       I = ((e_eg) / (r_eg + rn)) * (eps / 1000); // Расчёт по формулам электротехники
       U = (rn * I) * (eps / 1000);
 
