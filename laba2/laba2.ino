@@ -27,7 +27,7 @@ double _xx = 0;
 
 void setup() {
 
-   randomSeed(analogRead(PB9)); // задаем зерно рандомной генерации  
+   randomSeed(analogRead(PB1)); // задаем зерно рандомной генерации  
    r = r_mas[random(0, 4)]; // рандомное напряжение
    XL = XL_mas[random(0, 5)]; // рандомное XL
    tm1637.init();
@@ -102,7 +102,7 @@ void loop() {
    lcd.setCursor(1, 3);
    lcd.print(":");
    lcd.setCursor(2, 3);
-   dtostrf(I, 1, 3, buffer); // Формат до 1 знака после запятой
+   dtostrf(I, 1, 3, buffer); // Формат до 3 знака после запятой
    lcd.print(buffer);
    lcd.print(" ");
 
